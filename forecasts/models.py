@@ -1,13 +1,19 @@
 from django.db import models
+from locations.models import Location
 
 
-class Location(models.Model):
-    name = models.CharField(max_length=100)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    elevation = models.FloatField()
+class Forecast(models.Model):
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name='forecasts')
+    forecast_date = models.DateField()
+    temperature_min = models.FloatField()
+    temperature_max = models.FloatField()
+    humidity = models.FloatField()
+    precipitation_probability = models.FloatField()
+    wind_spend = models.FloatField()
+    wind_direction = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
-        return self.name
+        return f"Forecast for {self.location.name if self.location else 'Unknown Location'} on {self.forecast_date}"
+
